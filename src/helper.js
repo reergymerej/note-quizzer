@@ -54,3 +54,11 @@ export const getRangeWithOctaves = (requested) => {
 
   return list
 }
+
+export const rand = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export const randFromList = (list) => list[rand(0, list.length - 1)]

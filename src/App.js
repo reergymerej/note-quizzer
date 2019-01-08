@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 import * as helper from './helper'
 
+const trebleRange = helper.getRangeWithOctaves('D4G5')
+const bassRange = helper.getRangeWithOctaves('F2B4')
+
 const Note = (props) => (
   <div className="Note" />
 )
@@ -44,22 +47,32 @@ const Staff = (props) => {
 }
 
 const Treble = (props) => {
-  const range = helper.getRangeWithOctaves('D4G5').reverse()
+  const range = trebleRange.reverse()
   return (
     <Staff treble range={range} on={props.on} />
   )
 }
 
 const Bass = (props) => {
-  const range = helper.getRangeWithOctaves('F2B4').reverse()
+  const range = bassRange.reverse()
   return (
     <Staff bass range={range} on={props.on} />
   )
 }
 
+const getRandomNotes = () => {
+  return helper.randFromList([].concat(trebleRange, bassRange))
+}
+
 class App extends Component {
   state = {
-    on: ['B3', 'F4', 'G5'],
+    on: [],
+  }
+
+  componentDidMount() {
+    this.setState({
+      on: getRandomNotes(),
+    })
   }
 
   render() {
