@@ -21,15 +21,39 @@ export const getRange = (range) => {
   return values
 }
 
-export const getRangeWithOctaves = (range) => {
+export const getRangeWithOctaves = (requested) => {
   const regex = (/([A-G])(\d)([A-G])(\d)/)
-  const match = regex.exec(range)
+  const match = regex.exec(requested)
   if (!match) {
     throw new Error('invalid range')
   }
-  const [,start, startOctave, end, endOctave] = match
+  const [,start,, end] = match
+  let [,, startOctave,, endOctave] = match
+  startOctave = parseInt(startOctave, 10)
+  endOctave = parseInt(endOctave, 10)
+
   if (startOctave > endOctave) {
     throw new Error('invalid range')
   }
-  console.log(start, startOctave, end, endOctave)
+
+  let ranges = []
+  let currentOctave = startOctave
+  do {
+    const range = getRange(`${start}${end}`)
+    ranges = ranges.concat(
+      // add octaves
+      range.map((x, i) => {
+        const nextOctave = i > 0 && x === 'A'
+        const octave = nextOctave ? currentOctave + 1 : currentOctave
+        return `${x}${octave}`
+      })
+    )
+    currentOctave++
+  } while (
+    start === end
+      ? currentOctave < endOctave
+      : currentOctave <= endOctave
+  )
+
+  return ranges.filter((x, i, all) => all.indexOf(x) === i)
 }
