@@ -68,6 +68,18 @@ const getRandomNotes = () => {
   return [helper.randFromList([].concat(trebleRange, bassRange))]
 }
 
+const Scoreboard = (props) => (
+  <div className="Scoreboard">
+    <div className="best">{props.best}</div>
+    <div className="time">{props.time}</div>
+    <div className="current">{props.points}</div>
+  </div>
+)
+
+const answerIsCorrect = (value, on) => {
+  return on.join().includes(value.toUpperCase())
+}
+
 class App extends Component {
   state = {
     on: [],
@@ -75,6 +87,8 @@ class App extends Component {
     input: "",
     disable: false,
     time: 0,
+    points: 0,
+    best: 0,
   }
 
   componentDidMount() {
@@ -103,9 +117,16 @@ class App extends Component {
 
   handleInputChange = (event) => {
     const { value } = event.target
-    this.timer = setTimeout(() => {
+    const change = answerIsCorrect(value, this.state.on) ? 1 : -1
+
+    this.answerTimer = setTimeout(() => {
       this.nextNote()
-      this.setState({ labelMode: 'off' })
+      this.setState(prevState => ({
+        labelMode: 'off',
+        points: prevState.points + change,
+      })
+      )
+
     }, 1000)
 
     this.setState({
@@ -116,19 +137,21 @@ class App extends Component {
   }
 
   handleStartClick = () => {
-    this.setState({ time: 30 })
+    this.setState({ time: 30, points: 0 })
 
     this.gameInterval = setInterval(() => {
       const time = this.state.time - 1
       this.setState({ time: time })
       if (!time) {
         clearTimeout(this.gameInterval)
+        const best = Math.max(this.state.best, this.state.points)
+        this.setState({ best })
       }
     }, 1000)
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer)
+    clearTimeout(this.answerTimer)
     clearTimeout(this.gameInterval)
   }
 
@@ -136,6 +159,11 @@ class App extends Component {
     const running = this.state.time > 0
     return (
       <div className="App">
+        <Scoreboard
+          time={this.state.time}
+          points={this.state.points}
+          best={this.state.best}
+        />
         <Treble on={this.state.on} labels={this.state.labelMode} />
         <Bass on={this.state.on} labels={this.state.labelMode} />
 

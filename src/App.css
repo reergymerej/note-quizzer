@@ -68,3 +68,18 @@
   text-align: center;
   text-transform: uppercase;
 }
+
+.Scoreboard {
+  display: flex;
+  justify-content: space-around;
+  font-size: 2em;
+}
+
+.time {
+  width: 4em;
+  text-align: center;
+}
+
+.current {
+  font-size: 1em;
+}
