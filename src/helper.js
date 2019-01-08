@@ -6,9 +6,15 @@ export const getNext = (list, current) => {
   return list[nextIndex]
 }
 
+export const getNextWithOctave = (note, octave) => {
+  const nextNote = getNext(vals, note)
+  const nextOctave = nextNote === 'A' ? octave + 1 : octave
+  return [nextNote, nextOctave ]
+}
+
 export const getRange = (range) => {
   const [start, end] = range.split('')
-  if (!vals.includes(start) || !vals.includes(end)) {
+  if (!vals.includes(start) || !vals.includes(end) || (start === end)) {
     throw new Error('invalid range')
   }
   let values = [start]
@@ -27,6 +33,7 @@ export const getRangeWithOctaves = (requested) => {
   if (!match) {
     throw new Error('invalid range')
   }
+
   const [,start,, end] = match
   let [,, startOctave,, endOctave] = match
   startOctave = parseInt(startOctave, 10)
@@ -36,24 +43,14 @@ export const getRangeWithOctaves = (requested) => {
     throw new Error('invalid range')
   }
 
-  let ranges = []
-  let currentOctave = startOctave
+  let list = [`${start}${startOctave}`]
+  let previous = [start, startOctave]
   do {
-    const range = getRange(`${start}${end}`)
-    ranges = ranges.concat(
-      // add octaves
-      range.map((x, i) => {
-        const nextOctave = i > 0 && x === 'A'
-        const octave = nextOctave ? currentOctave + 1 : currentOctave
-        return `${x}${octave}`
-      })
-    )
-    currentOctave++
-  } while (
-    start === end
-      ? currentOctave < endOctave
-      : currentOctave <= endOctave
-  )
+  const [prevNote, prevOctave] = previous
+  const [note, octave] = getNextWithOctave(prevNote, prevOctave)
+  list = list.concat(`${note}${octave}`)
+  previous = [note, octave]
+  } while (previous[0] !== end || previous[1] !== endOctave)
 
-  return ranges.filter((x, i, all) => all.indexOf(x) === i)
+  return list
 }

@@ -17,18 +17,25 @@ describe('helpers', () => {
     })
   })
 
+  describe('getNextWithOctave', () => {
+    it('should get next with octave', () => {
+      expect(helper.getNextWithOctave('A', 4)).toEqual(['B', 4])
+      expect(helper.getNextWithOctave('G', 4)).toEqual(['A', 5])
+    })
+  })
+
   describe('basic range', () => {
     it('should return a valid range', () => {
       expect(helper.getRange('AG')).toEqual('ABCDEFG'.split(''))
       expect(helper.getRange('BE')).toEqual('BCDE'.split(''))
       expect(helper.getRange('FB')).toEqual('FGAB'.split(''))
-      expect(helper.getRange('AA')).toEqual('ABCDEFGA'.split(''))
     })
 
     it('should handle invalid ranges', () => {
       expect(() => { helper.getRange('YO') }).toThrow('invalid range')
       expect(() => { helper.getRange('19') }).toThrow('invalid range')
       expect(() => { helper.getRange('C') }).toThrow('invalid range')
+      expect(() => { helper.getRange('AA') }).toThrow('invalid range')
     })
   })
 
@@ -43,6 +50,7 @@ describe('helpers', () => {
       expect(helper.getRangeWithOctaves('A4G4')).toEqual(['A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4'])
       expect(helper.getRangeWithOctaves('A3G4')).toEqual(['A3', 'B3', 'C3', 'D3', 'E3', 'F3', 'G3', 'A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4'])
       expect(helper.getRangeWithOctaves('A4A5')).toEqual(['A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4', 'A5'])
+      expect(helper.getRangeWithOctaves('D4G5')).toEqual(['D4', 'E4', 'F4', 'G4', 'A5', 'B5', 'C5', 'D5', 'E5', 'F5', 'G5'])
     })
   })
 })

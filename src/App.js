@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import * as helper from './helper'
 
 const Note = (props) => (
   <div className="Note" />
@@ -24,54 +25,42 @@ const Space = (props) => (
 )
 
 
-const Staff = (props) => (
-  <div className={`Staff ${ props.treble ? "TrebleCleff" : "BassCleff" }`}>
-    {props.children}
-  </div>
-)
-
-const Treble = () => {
+const Staff = (props) => {
   return (
-  <Staff treble>
-    <Space name="G5" />
-    <Line name="F5" />
-    <Space name="E5" />
-    <Line name="D5" />
-    <Space name="C5" />
-    <Line name="B5" />
-    <Space name="A5" />
-    <Line name="G4" on />
-    <Space name="F4" />
-    <Line name="E4" />
-    <Space name="D4" />
-  </Staff>
-)
-}
-
-const Bass = () => {
-  return (
-    <Staff bass>
-      <Space name="B4" />
-      <Line name="A4" />
-      <Space name="" />
-      <Line name="" />
-      <Space name="" />
-      <Line name="" />
-      <Space name="" />
-      <Line name="" on />
-      <Space name="" />
-      <Line name="" />
-      <Space name="" />
-    </Staff>
+    <div className={`Staff ${ props.treble ? "TrebleCleff" : "BassCleff" }`}>
+      {
+        props.range.map((name, i) => {
+          const Child = i % 2 === 0 ? Space : Line
+          return (
+            <Child key={name} name={name} />
+          )
+        })
+      }
+    </div>
   )
 }
+
+const Treble = (props) => {
+  const range = helper.getRangeWithOctaves('D4G5').reverse()
+  console.log(range)
+  return (
+    <Staff treble range={range} />
+  )
+}
+
+const Bass = (props) => {
+  const range = helper.getRangeWithOctaves('D4G5').reverse()
+  return (
+    <Staff bass range={range} />
+  )
+}
+
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Treble />
-        <Bass />
       </div>
     );
   }
