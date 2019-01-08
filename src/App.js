@@ -74,6 +74,7 @@ class App extends Component {
     labelMode: "none",
     input: "",
     disable: false,
+    time: 0,
   }
 
   componentDidMount() {
@@ -114,17 +115,32 @@ class App extends Component {
     })
   }
 
+  handleStartClick = () => {
+    this.setState({ time: 30 })
+
+    this.gameInterval = setInterval(() => {
+      const time = this.state.time - 1
+      this.setState({ time: time })
+      if (!time) {
+        clearTimeout(this.gameInterval)
+      }
+    }, 1000)
+  }
+
   componentWillUnmount() {
-    this.clearTimeout(this.timer)
+    clearTimeout(this.timer)
+    clearTimeout(this.gameInterval)
   }
 
   render() {
+    const running = this.state.time > 0
     return (
       <div className="App">
         <Treble on={this.state.on} labels={this.state.labelMode} />
         <Bass on={this.state.on} labels={this.state.labelMode} />
+
         <div className="Tools">
-          { !this.state.running &&
+          { !running &&
             <select onChange={this.handleSelectChange} value={this.state.labelMode}>
               <option value="none">None</option>
               <option value="all">All</option>
@@ -132,11 +148,15 @@ class App extends Component {
             </select>
           }
 
-          <button onClick={this.handleNextClick}>
-            Next
-          </button>
+          { !running &&
+            <button onClick={this.handleNextClick}>Next</button>
+          }
 
-          { this.state.running &&
+          { !running &&
+            <button onClick={this.handleStartClick}>Start</button>
+          }
+
+          { running &&
             <input
               className="input"
               onChange={this.handleInputChange}
