@@ -92,7 +92,6 @@ class App extends Component {
     this.setState({
       on: getRandomNotes(),
       input: '',
-      labelMode: 'off',
       disable: false,
     })
 
@@ -103,7 +102,10 @@ class App extends Component {
 
   handleInputChange = (event) => {
     const { value } = event.target
-    this.timer = setTimeout(this.nextNote, 1000)
+    this.timer = setTimeout(() => {
+      this.nextNote()
+      this.setState({ labelMode: 'off' })
+    }, 1000)
 
     this.setState({
       input: value,
@@ -122,26 +124,31 @@ class App extends Component {
         <Treble on={this.state.on} labels={this.state.labelMode} />
         <Bass on={this.state.on} labels={this.state.labelMode} />
         <div className="Tools">
-          <select onChange={this.handleSelectChange} value={this.state.labelMode}>
-            <option value="none">None</option>
-            <option value="all">All</option>
-            <option value="on">Current</option>
-          </select>
+          { !this.state.running &&
+            <select onChange={this.handleSelectChange} value={this.state.labelMode}>
+              <option value="none">None</option>
+              <option value="all">All</option>
+              <option value="on">Current</option>
+            </select>
+          }
 
           <button onClick={this.handleNextClick}>
             Next
           </button>
 
-          <input
-            onChange={this.handleInputChange}
-            value={this.state.input}
-            disabled={this.state.disable}
-            autoFocus
-            ref={(node) => this.input = node}
-          />
+          { this.state.running &&
+            <input
+              className="input"
+              onChange={this.handleInputChange}
+              value={this.state.input}
+              disabled={this.state.disable}
+              autoFocus
+              ref={(node) => this.input = node}
+            />
+          }
         </div>
       </div>
-    );
+    )
   }
 }
 
