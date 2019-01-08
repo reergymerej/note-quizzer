@@ -20,3 +20,16 @@ export const getRange = (range) => {
   } while (previous !== end)
   return values
 }
+
+export const getRangeWithOctaves = (range) => {
+  const regex = (/([A-G])(\d)([A-G])(\d)/)
+  const match = regex.exec(range)
+  if (!match) {
+    throw new Error('invalid range')
+  }
+  const [,start, startOctave, end, endOctave] = match
+  if (startOctave > endOctave) {
+    throw new Error('invalid range')
+  }
+  console.log(start, startOctave, end, endOctave)
+}
