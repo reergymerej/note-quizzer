@@ -72,6 +72,8 @@ class App extends Component {
   state = {
     on: [],
     labelMode: "none",
+    input: "",
+    disable: false,
   }
 
   componentDidMount() {
@@ -87,7 +89,31 @@ class App extends Component {
   }
 
   nextNote = () => {
-    this.setState({ on: getRandomNotes() })
+    this.setState({
+      on: getRandomNotes(),
+      input: '',
+      labelMode: 'off',
+      disable: false,
+    })
+
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+
+  handleInputChange = (event) => {
+    const { value } = event.target
+    this.timer = setTimeout(this.nextNote, 1000)
+
+    this.setState({
+      input: value,
+      labelMode: "on",
+      disable: true,
+    })
+  }
+
+  componentWillUnmount() {
+    this.clearTimeout(this.timer)
   }
 
   render() {
@@ -95,7 +121,7 @@ class App extends Component {
       <div className="App">
         <Treble on={this.state.on} labels={this.state.labelMode} />
         <Bass on={this.state.on} labels={this.state.labelMode} />
-        <div>
+        <div className="Tools">
           <select onChange={this.handleSelectChange} value={this.state.labelMode}>
             <option value="none">None</option>
             <option value="all">All</option>
@@ -105,6 +131,14 @@ class App extends Component {
           <button onClick={this.handleNextClick}>
             Next
           </button>
+
+          <input
+            onChange={this.handleInputChange}
+            value={this.state.input}
+            disabled={this.state.disable}
+            autoFocus
+            ref={(node) => this.input = node}
+          />
         </div>
       </div>
     );
