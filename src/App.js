@@ -6,7 +6,7 @@ const trebleRange = helper.getRangeWithOctaves('D4G5')
 const bassRange = helper.getRangeWithOctaves('F2B4')
 
 const Note = (props) => (
-  <div className="Note" />
+  <div className="Note">{props.name}</div>
 )
 
 const Label = (props) => (
@@ -16,14 +16,14 @@ const Label = (props) => (
 const Line = (props) => (
   <div className="Line">
     {props.on && <Note />}
-    <Label value={props.name} />
+    {props.showLabel && <Label value={props.name} />}
   </div>
 )
 
 const Space = (props) => (
   <div className="Space">
     {props.on && <Note />}
-    <Label value={props.name} offset />
+    {props.showLabel && <Label value={props.name} offset />}
   </div>
 )
 
@@ -33,11 +33,15 @@ const Staff = (props) => {
       {
         props.range.map((name, i) => {
           const Child = i % 2 === 0 ? Space : Line
+          const on = props.on.includes(name)
+          const showLabel = props.labels === "all"
+            || (props.labels === "on" && on)
           return (
             <Child
               key={name}
               name={name}
-              on={props.on.includes(name)}
+              on={on}
+              showLabel={showLabel}
             />
           )
         })
@@ -47,39 +51,61 @@ const Staff = (props) => {
 }
 
 const Treble = (props) => {
-  const range = trebleRange.reverse()
+  const range = [...trebleRange].reverse()
   return (
-    <Staff treble range={range} on={props.on} />
+    <Staff treble range={range} on={props.on} labels={props.labels} />
   )
 }
 
 const Bass = (props) => {
-  const range = bassRange.reverse()
+  const range = [...bassRange].reverse()
   return (
-    <Staff bass range={range} on={props.on} />
+    <Staff bass range={range} on={props.on} labels={props.labels} />
   )
 }
 
 const getRandomNotes = () => {
-  return helper.randFromList([].concat(trebleRange, bassRange))
+  return [helper.randFromList([].concat(trebleRange, bassRange))]
 }
 
 class App extends Component {
   state = {
     on: [],
+    labelMode: "none",
   }
 
   componentDidMount() {
-    this.setState({
-      on: getRandomNotes(),
-    })
+    this.nextNote()
+  }
+
+  handleSelectChange = (event) => {
+    this.setState({ labelMode: event.target.value })
+  }
+
+  handleNextClick = (event) => {
+    this.nextNote()
+  }
+
+  nextNote = () => {
+    this.setState({ on: getRandomNotes() })
   }
 
   render() {
     return (
       <div className="App">
-        <Treble on={this.state.on} />
-        <Bass on={this.state.on} />
+        <Treble on={this.state.on} labels={this.state.labelMode} />
+        <Bass on={this.state.on} labels={this.state.labelMode} />
+        <div>
+          <select onChange={this.handleSelectChange} value={this.state.labelMode}>
+            <option value="none">None</option>
+            <option value="all">All</option>
+            <option value="on">Current</option>
+          </select>
+
+          <button onClick={this.handleNextClick}>
+            Next
+          </button>
+        </div>
       </div>
     );
   }
