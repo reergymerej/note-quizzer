@@ -1,32 +1,54 @@
-.App {
+.Staff {
+  margin-top: 2em;
+  position: relative;
+}
+
+.TrebleCleff:before {
+  content: '\1D11E';
+  font-size: 10.5em;
+  position: absolute;
+  bottom: -63px;
+}
+
+.BassCleff:before {
+  content: '\1D122';
+  font-size: 6.1em;
+  position: absolute;
+  top: -31px;
+}
+
+.Line {
+  background: #000;
+  height: 1px;
+  margin-top: 0.5em;
+  position: relative;
+}
+
+.Space {
+  height: 1px;
+  margin-top: 0.5em;
+  position: relative;
+}
+
+.Note:before {
+  content: '\2669';
+  font-size: 3.5em;
+  position: absolute;
+  top: -55px;
+  left: 120px;
+}
+
+.Label {
+  background: #0099ffc7;
+  position: absolute;
+  bottom: -0.5em;
+  padding: 0 5px;
+  border-radius: 1em;
   text-align: center;
+  left: 70px;
+  width: 1.4em;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Label.offset {
+  left: 101px;
 }
