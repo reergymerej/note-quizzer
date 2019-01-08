@@ -45,10 +45,10 @@
   padding: 0 5px;
   border-radius: 1em;
   text-align: center;
-  left: 70px;
+  left: 101px;
   width: 1.4em;
 }
 
 .Label.offset {
-  left: 101px;
+  left: 70px;
 }

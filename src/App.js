@@ -42,14 +42,13 @@ const Staff = (props) => {
 
 const Treble = (props) => {
   const range = helper.getRangeWithOctaves('D4G5').reverse()
-  console.log(range)
   return (
     <Staff treble range={range} />
   )
 }
 
 const Bass = (props) => {
-  const range = helper.getRangeWithOctaves('D4G5').reverse()
+  const range = helper.getRangeWithOctaves('F2B4').reverse()
   return (
     <Staff bass range={range} />
   )
@@ -61,6 +60,7 @@ class App extends Component {
     return (
       <div className="App">
         <Treble />
+        <Bass />
       </div>
     );
   }
